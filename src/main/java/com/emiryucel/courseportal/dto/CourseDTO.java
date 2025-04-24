@@ -17,9 +17,7 @@ public class CourseDTO {
     @Size(min = 10, max = 1000, message = "Description must be between 10 and 1000 characters")
     private String description;
     
-    @NotBlank(message = "Instructor name is required")
-    @Size(min = 2, max = 100, message = "Instructor name must be between 2 and 100 characters")
-    private String instructor;
+    private String lecturerId;
     
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")

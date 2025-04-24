@@ -3,6 +3,9 @@ package com.emiryucel.courseportal.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,9 +24,9 @@ public class Course {
     @Size(min = 10, max = 1000, message = "Description must be between 10 and 1000 characters")
     private String description;
     
-    @NotBlank(message = "Instructor name is required")
-    @Size(min = 2, max = 100, message = "Instructor name must be between 2 and 100 characters")
-    private String instructor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lecturer_id", nullable = true)
+    private Lecturer lecturer;
     
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
@@ -44,4 +47,6 @@ public class Course {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+
 } 
