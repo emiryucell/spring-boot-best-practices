@@ -1,0 +1,13 @@
+com\emiryucel\courseportal\service\impl\LecturerServiceImpl.class
+com\emiryucel\courseportal\model\Course.class
+com\emiryucel\courseportal\service\LecturerService.class
+com\emiryucel\courseportal\CoursePortalApplication.class
+com\emiryucel\courseportal\model\Lecturer.class
+com\emiryucel\courseportal\dto\CourseDTO.class
+com\emiryucel\courseportal\repository\LecturerRepository.class
+com\emiryucel\courseportal\service\CourseService.class
+com\emiryucel\courseportal\controller\LecturerController.class
+com\emiryucel\courseportal\dto\LecturerDTO.class
+com\emiryucel\courseportal\repository\CourseRepository.class
+com\emiryucel\courseportal\service\impl\CourseServiceImpl.class
+com\emiryucel\courseportal\controller\CourseController.class

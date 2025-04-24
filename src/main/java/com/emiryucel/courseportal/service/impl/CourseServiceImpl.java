@@ -1,7 +1,9 @@
 package com.emiryucel.courseportal.service.impl;
 
 import com.emiryucel.courseportal.model.Course;
+import com.emiryucel.courseportal.model.Lecturer;
 import com.emiryucel.courseportal.repository.CourseRepository;
+import com.emiryucel.courseportal.repository.LecturerRepository;
 import com.emiryucel.courseportal.service.CourseService;
 import com.emiryucel.courseportal.dto.CourseDTO;
 import org.slf4j.Logger;
@@ -19,10 +21,12 @@ public class CourseServiceImpl implements CourseService {
 
     private static final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
     private final CourseRepository courseRepository;
+    private final LecturerRepository lecturerRepository;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, LecturerRepository lecturerRepository) {
         this.courseRepository = courseRepository;
+        this.lecturerRepository = lecturerRepository;
         logger.info("CourseServiceImpl initialized");
     }
 
@@ -31,8 +35,17 @@ public class CourseServiceImpl implements CourseService {
         logger.debug("Converting DTO to entity for course: {}", courseDTO.getTitle());
         Course course = convertToEntity(courseDTO);
         logger.debug("Saving course to database");
+//        if (courseDTO.getLecturerId() != null) {
+//            Lecturer lecturer = lecturerRepository.findById(courseDTO.getLecturerId())
+//                    .orElseThrow(() -> {
+//                        logger.error("Lecturer not found with id: {}", courseDTO.getLecturerId());
+//                        return new RuntimeException("Lecturer not found with id: " + courseDTO.getLecturerId());
+//                    });
+//            lecturer.getCourses().add(course);
+//        }
         Course savedCourse = courseRepository.save(course);
         logger.debug("Course saved successfully with ID: {}", savedCourse.getId());
+
         return convertToDTO(savedCourse);
     }
 
@@ -48,8 +61,15 @@ public class CourseServiceImpl implements CourseService {
         logger.debug("Updating course fields for ID: {}", id);
         existingCourse.setTitle(courseDTO.getTitle());
         existingCourse.setDescription(courseDTO.getDescription());
-        existingCourse.setInstructor(courseDTO.getInstructor());
         existingCourse.setPrice(courseDTO.getPrice());
+        
+        // Update lecturer
+        Lecturer lecturer = lecturerRepository.findById(courseDTO.getLecturerId())
+                .orElseThrow(() -> {
+                    logger.error("Lecturer not found with id: {}", courseDTO.getLecturerId());
+                    return new RuntimeException("Lecturer not found with id: " + courseDTO.getLecturerId());
+                });
+        existingCourse.setLecturer(lecturer);
         
         logger.debug("Saving updated course");
         Course updatedCourse = courseRepository.save(existingCourse);
@@ -91,8 +111,16 @@ public class CourseServiceImpl implements CourseService {
         Course course = new Course();
         course.setTitle(courseDTO.getTitle());
         course.setDescription(courseDTO.getDescription());
-        course.setInstructor(courseDTO.getInstructor());
         course.setPrice(courseDTO.getPrice());
+        
+        // Set lecturer
+        Lecturer lecturer = lecturerRepository.findById(courseDTO.getLecturerId())
+                .orElseThrow(() -> {
+                    logger.error("Lecturer not found with id: {}", courseDTO.getLecturerId());
+                    return new RuntimeException("Lecturer not found with id: " + courseDTO.getLecturerId());
+                });
+        course.setLecturer(lecturer);
+        
         return course;
     }
 
@@ -102,7 +130,7 @@ public class CourseServiceImpl implements CourseService {
         courseDTO.setId(course.getId());
         courseDTO.setTitle(course.getTitle());
         courseDTO.setDescription(course.getDescription());
-        courseDTO.setInstructor(course.getInstructor());
+        courseDTO.setLecturerId(course.getLecturer().getId());
         courseDTO.setPrice(course.getPrice());
         courseDTO.setCreatedAt(course.getCreatedAt());
         courseDTO.setUpdatedAt(course.getUpdatedAt());
