@@ -3,6 +3,9 @@ package com.emiryucel.courseportal.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,5 +55,16 @@ public class Lecturer {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+
+    public void addCourse(Course course) {
+        courses.add(course);
+        course.setLecturer(this);
+    }
+
+    public void removeCourse(Course course) {
+        courses.remove(course);
+        course.setLecturer(null);
     }
 } 

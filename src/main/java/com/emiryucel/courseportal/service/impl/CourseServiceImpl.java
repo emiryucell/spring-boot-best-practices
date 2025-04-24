@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,17 +36,8 @@ public class CourseServiceImpl implements CourseService {
         logger.debug("Converting DTO to entity for course: {}", courseDTO.getTitle());
         Course course = convertToEntity(courseDTO);
         logger.debug("Saving course to database");
-//        if (courseDTO.getLecturerId() != null) {
-//            Lecturer lecturer = lecturerRepository.findById(courseDTO.getLecturerId())
-//                    .orElseThrow(() -> {
-//                        logger.error("Lecturer not found with id: {}", courseDTO.getLecturerId());
-//                        return new RuntimeException("Lecturer not found with id: " + courseDTO.getLecturerId());
-//                    });
-//            lecturer.getCourses().add(course);
-//        }
         Course savedCourse = courseRepository.save(course);
         logger.debug("Course saved successfully with ID: {}", savedCourse.getId());
-
         return convertToDTO(savedCourse);
     }
 
@@ -63,13 +55,21 @@ public class CourseServiceImpl implements CourseService {
         existingCourse.setDescription(courseDTO.getDescription());
         existingCourse.setPrice(courseDTO.getPrice());
         
-        // Update lecturer
-        Lecturer lecturer = lecturerRepository.findById(courseDTO.getLecturerId())
-                .orElseThrow(() -> {
-                    logger.error("Lecturer not found with id: {}", courseDTO.getLecturerId());
-                    return new RuntimeException("Lecturer not found with id: " + courseDTO.getLecturerId());
-                });
-        existingCourse.setLecturer(lecturer);
+        if (StringUtils.hasText(courseDTO.getLecturerId())) {
+            Lecturer lecturer = lecturerRepository.findById(courseDTO.getLecturerId())
+                    .orElseThrow(() -> {
+                        logger.error("Lecturer not found with id: {}", courseDTO.getLecturerId());
+                        return new RuntimeException("Lecturer not found with id: " + courseDTO.getLecturerId());
+                    });
+            
+            if (existingCourse.getLecturer() != null && !existingCourse.getLecturer().getId().equals(lecturer.getId())) {
+                existingCourse.getLecturer().removeCourse(existingCourse);
+            }
+            
+            lecturer.addCourse(existingCourse);
+        } else if (existingCourse.getLecturer() != null) {
+            existingCourse.getLecturer().removeCourse(existingCourse);
+        }
         
         logger.debug("Saving updated course");
         Course updatedCourse = courseRepository.save(existingCourse);
@@ -102,6 +102,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void deleteCourse(String id) {
         logger.debug("Deleting course with ID: {}", id);
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
+                
+        if (course.getLecturer() != null) {
+            course.getLecturer().removeCourse(course);
+        }
+        
         courseRepository.deleteById(id);
         logger.debug("Course deleted successfully");
     }
@@ -113,13 +120,14 @@ public class CourseServiceImpl implements CourseService {
         course.setDescription(courseDTO.getDescription());
         course.setPrice(courseDTO.getPrice());
         
-        // Set lecturer
-        Lecturer lecturer = lecturerRepository.findById(courseDTO.getLecturerId())
-                .orElseThrow(() -> {
-                    logger.error("Lecturer not found with id: {}", courseDTO.getLecturerId());
-                    return new RuntimeException("Lecturer not found with id: " + courseDTO.getLecturerId());
-                });
-        course.setLecturer(lecturer);
+        if (StringUtils.hasText(courseDTO.getLecturerId())) {
+            Lecturer lecturer = lecturerRepository.findById(courseDTO.getLecturerId())
+                    .orElseThrow(() -> {
+                        logger.error("Lecturer not found with id: {}", courseDTO.getLecturerId());
+                        return new RuntimeException("Lecturer not found with id: " + courseDTO.getLecturerId());
+                    });
+            lecturer.addCourse(course);
+        }
         
         return course;
     }
@@ -130,7 +138,7 @@ public class CourseServiceImpl implements CourseService {
         courseDTO.setId(course.getId());
         courseDTO.setTitle(course.getTitle());
         courseDTO.setDescription(course.getDescription());
-        courseDTO.setLecturerId(course.getLecturer().getId());
+        courseDTO.setLecturerId(course.getLecturer() != null ? course.getLecturer().getId() : null);
         courseDTO.setPrice(course.getPrice());
         courseDTO.setCreatedAt(course.getCreatedAt());
         courseDTO.setUpdatedAt(course.getUpdatedAt());

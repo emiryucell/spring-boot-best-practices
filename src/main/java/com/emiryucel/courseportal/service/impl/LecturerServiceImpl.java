@@ -35,7 +35,6 @@ public class LecturerServiceImpl implements LecturerService {
     public LecturerDTO createLecturer(LecturerDTO lecturerDTO) {
         logger.debug("Converting DTO to entity for lecturer: {} {}", lecturerDTO.getFirstName(), lecturerDTO.getLastName());
         
-        // Check if email already exists
         if (lecturerRepository.findByEmail(lecturerDTO.getEmail()).isPresent()) {
             logger.error("Email already exists: {}", lecturerDTO.getEmail());
             throw new RuntimeException("Email already exists: " + lecturerDTO.getEmail());
@@ -57,7 +56,6 @@ public class LecturerServiceImpl implements LecturerService {
                     return new RuntimeException("Lecturer not found with id: " + id);
                 });
         
-        // Check if email is being changed and if new email already exists
         if (!existingLecturer.getEmail().equals(lecturerDTO.getEmail())) {
             if (lecturerRepository.findByEmail(lecturerDTO.getEmail()).isPresent()) {
                 logger.error("Email already exists: {}", lecturerDTO.getEmail());
@@ -140,8 +138,9 @@ public class LecturerServiceImpl implements LecturerService {
         logger.debug("Course removed successfully");
         return convertToDTO(updatedLecturer);
     }
+    @Override
 
-    private Lecturer convertToEntity(LecturerDTO lecturerDTO) {
+    public Lecturer convertToEntity(LecturerDTO lecturerDTO) {
         logger.trace("Converting LecturerDTO to Lecturer entity");
         Lecturer lecturer = new Lecturer();
         lecturer.setFirstName(lecturerDTO.getFirstName());
@@ -151,8 +150,9 @@ public class LecturerServiceImpl implements LecturerService {
         lecturer.setBio(lecturerDTO.getBio());
         return lecturer;
     }
+    @Override
 
-    private LecturerDTO convertToDTO(Lecturer lecturer) {
+    public LecturerDTO convertToDTO(Lecturer lecturer) {
         logger.trace("Converting Lecturer entity to LecturerDTO");
         LecturerDTO lecturerDTO = new LecturerDTO();
         lecturerDTO.setId(lecturer.getId());
@@ -164,7 +164,6 @@ public class LecturerServiceImpl implements LecturerService {
         lecturerDTO.setCreatedAt(lecturer.getCreatedAt());
         lecturerDTO.setUpdatedAt(lecturer.getUpdatedAt());
         
-        // Convert course IDs
         if (lecturer.getCourses() != null) {
             lecturerDTO.setCourseIds(lecturer.getCourses().stream()
                     .map(Course::getId)
