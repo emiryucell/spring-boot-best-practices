@@ -2,13 +2,9 @@ package com.emiryucel.courseportal.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 public class LecturerDTO {
-    
-    private String id;
     
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
@@ -29,9 +25,4 @@ public class LecturerDTO {
     
     @Size(max = 1000, message = "Bio must not exceed 1000 characters")
     private String bio;
-    
-    private Set<String> courseIds;
-    
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 } 
