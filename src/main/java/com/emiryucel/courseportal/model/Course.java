@@ -3,9 +3,6 @@ package com.emiryucel.courseportal.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Data
