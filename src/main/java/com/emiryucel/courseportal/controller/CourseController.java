@@ -29,7 +29,7 @@ public class CourseController {
     public ResponseEntity<CourseResponseDTO> createCourse(@Valid @RequestBody CourseDTO courseDTO) {
         log.info("Creating new course with title: {}", courseDTO.getTitle());
         CourseResponseDTO createdCourse = courseService.createCourse(courseDTO);
-        log.info("Course created successfully with ID: {}", createdCourse.getId());
+        log.info("Course created successfully with name: {}", createdCourse.getTitle());
         return new ResponseEntity<>(createdCourse, HttpStatus.CREATED);
     }
 

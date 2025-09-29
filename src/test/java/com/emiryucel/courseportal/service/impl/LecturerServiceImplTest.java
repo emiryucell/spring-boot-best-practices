@@ -71,7 +71,6 @@ class LecturerServiceImplTest {
         lecturer.setUpdatedAt(LocalDateTime.now());
 
         lecturerResponseDTO = new LecturerResponseDTO();
-        lecturerResponseDTO.setId("lecturer-123");
         lecturerResponseDTO.setFirstName("John");
         lecturerResponseDTO.setLastName("Doe");
         lecturerResponseDTO.setEmail("john.doe@university.edu");
@@ -98,7 +97,6 @@ class LecturerServiceImplTest {
         LecturerResponseDTO result = lecturerService.createLecturer(lecturerDTO);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo("lecturer-123");
         assertThat(result.getFirstName()).isEqualTo("John");
         assertThat(result.getLastName()).isEqualTo("Doe");
         assertThat(result.getEmail()).isEqualTo("john.doe@university.edu");
@@ -145,7 +143,6 @@ class LecturerServiceImplTest {
         LecturerResponseDTO result = lecturerService.updateLecturer(lecturerId, lecturerDTO);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo("lecturer-123");
         assertThat(result.getFirstName()).isEqualTo("John");
         assertThat(result.getLastName()).isEqualTo("Doe");
         assertThat(result.getEmail()).isEqualTo("john.doe@university.edu");
@@ -251,7 +248,6 @@ class LecturerServiceImplTest {
         LecturerResponseDTO result = lecturerService.getLecturerById(lecturerId);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo("lecturer-123");
         assertThat(result.getFirstName()).isEqualTo("John");
         assertThat(result.getLastName()).isEqualTo("Doe");
         assertThat(result.getEmail()).isEqualTo("john.doe@university.edu");
@@ -286,7 +282,6 @@ class LecturerServiceImplTest {
         lecturer2.setDepartment("Physics");
 
         LecturerResponseDTO lecturerResponseDTO2 = new LecturerResponseDTO();
-        lecturerResponseDTO2.setId("lecturer-456");
         lecturerResponseDTO2.setFirstName("Alice");
         lecturerResponseDTO2.setLastName("Johnson");
         lecturerResponseDTO2.setEmail("alice.johnson@university.edu");
@@ -302,10 +297,8 @@ class LecturerServiceImplTest {
 
         assertThat(result).isNotNull();
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getId()).isEqualTo("lecturer-123");
         assertThat(result.get(0).getFirstName()).isEqualTo("John");
         assertThat(result.get(0).getLastName()).isEqualTo("Doe");
-        assertThat(result.get(1).getId()).isEqualTo("lecturer-456");
         assertThat(result.get(1).getFirstName()).isEqualTo("Alice");
         assertThat(result.get(1).getLastName()).isEqualTo("Johnson");
 
@@ -358,7 +351,6 @@ class LecturerServiceImplTest {
         LecturerResponseDTO result = lecturerService.assignCourse(lecturerId, courseId);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo("lecturer-123");
         assertThat(lecturer.getCourses()).contains(course);
         assertThat(course.getLecturer()).isEqualTo(lecturer);
 
@@ -421,7 +413,7 @@ class LecturerServiceImplTest {
         LecturerResponseDTO result = lecturerService.removeCourse(lecturerId, courseId);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo("lecturer-123");
+        assertThat(result.getFirstName()).isEqualTo(lecturer.getFirstName());
 
         verify(lecturerRepository, times(1)).findById(lecturerId);
         verify(courseRepository, times(1)).findById(courseId);

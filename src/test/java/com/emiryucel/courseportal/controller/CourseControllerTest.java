@@ -51,7 +51,6 @@ class CourseControllerTest {
         courseDTO.setPrice(99.99);
 
         courseResponseDTO = new CourseResponseDTO();
-        courseResponseDTO.setId("course-123");
         courseResponseDTO.setTitle("Java Programming");
         courseResponseDTO.setDescription("Complete Java programming course for beginners");
         courseResponseDTO.setPrice(99.99);
@@ -66,7 +65,6 @@ class CourseControllerTest {
                 .content(objectMapper.writeValueAsString(courseDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value("course-123"))
                 .andExpect(jsonPath("$.title").value("Java Programming"))
                 .andExpect(jsonPath("$.description").value("Complete Java programming course for beginners"))
                 .andExpect(jsonPath("$.price").value(99.99));
@@ -95,7 +93,6 @@ class CourseControllerTest {
     void givenValidCourseDTO_whenUpdateCourse_thenReturnUpdatedCourse() throws Exception {
         String courseId = "course-123";
         CourseResponseDTO updatedCourse = new CourseResponseDTO();
-        updatedCourse.setId(courseId);
         updatedCourse.setTitle("Advanced Java Programming");
         updatedCourse.setDescription("Advanced Java programming course");
         updatedCourse.setPrice(149.99);
@@ -112,7 +109,6 @@ class CourseControllerTest {
                 .content(objectMapper.writeValueAsString(updateDTO)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(courseId))
                 .andExpect(jsonPath("$.title").value("Advanced Java Programming"))
                 .andExpect(jsonPath("$.description").value("Advanced Java programming course"))
                 .andExpect(jsonPath("$.price").value(149.99));
@@ -144,7 +140,6 @@ class CourseControllerTest {
         mockMvc.perform(get("/course/{id}", courseId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value("course-123"))
                 .andExpect(jsonPath("$.title").value("Java Programming"))
                 .andExpect(jsonPath("$.description").value("Complete Java programming course for beginners"))
                 .andExpect(jsonPath("$.price").value(99.99));
@@ -169,7 +164,6 @@ class CourseControllerTest {
     @DisplayName("Should get all courses successfully")
     void givenCoursesExist_whenGetAllCourses_thenReturnAllCourses() throws Exception {
         CourseResponseDTO course2 = new CourseResponseDTO();
-        course2.setId("course-456");
         course2.setTitle("Python Programming");
         course2.setDescription("Complete Python programming course");
         course2.setPrice(89.99);
@@ -182,9 +176,7 @@ class CourseControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].id").value("course-123"))
                 .andExpect(jsonPath("$[0].title").value("Java Programming"))
-                .andExpect(jsonPath("$[1].id").value("course-456"))
                 .andExpect(jsonPath("$[1].title").value("Python Programming"));
 
         verify(courseService, times(1)).getAllCourses();
@@ -204,7 +196,6 @@ class CourseControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.content.length()").value(1))
-                .andExpect(jsonPath("$.content[0].id").value("course-123"))
                 .andExpect(jsonPath("$.totalElements").value(1))
                 .andExpect(jsonPath("$.totalPages").value(1))
                 .andExpect(jsonPath("$.size").value(10))

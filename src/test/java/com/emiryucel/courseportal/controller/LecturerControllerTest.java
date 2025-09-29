@@ -50,7 +50,6 @@ class LecturerControllerTest {
         lecturerDTO.setBio("Experienced professor with 10 years of teaching experience");
 
         lecturerResponseDTO = new LecturerResponseDTO();
-        lecturerResponseDTO.setId("lecturer-123");
         lecturerResponseDTO.setFirstName("John");
         lecturerResponseDTO.setLastName("Doe");
         lecturerResponseDTO.setEmail("john.doe@university.edu");
@@ -68,7 +67,6 @@ class LecturerControllerTest {
                 .content(objectMapper.writeValueAsString(lecturerDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value("lecturer-123"))
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
                 .andExpect(jsonPath("$.email").value("john.doe@university.edu"))
@@ -114,7 +112,6 @@ class LecturerControllerTest {
     void givenValidLecturerDTO_whenUpdateLecturer_thenReturnUpdatedLecturer() throws Exception {
         String lecturerId = "lecturer-123";
         LecturerResponseDTO updatedLecturer = new LecturerResponseDTO();
-        updatedLecturer.setId(lecturerId);
         updatedLecturer.setFirstName("Jane");
         updatedLecturer.setLastName("Smith");
         updatedLecturer.setEmail("jane.smith@university.edu");
@@ -135,7 +132,6 @@ class LecturerControllerTest {
                 .content(objectMapper.writeValueAsString(updateDTO)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(lecturerId))
                 .andExpect(jsonPath("$.firstName").value("Jane"))
                 .andExpect(jsonPath("$.lastName").value("Smith"))
                 .andExpect(jsonPath("$.email").value("jane.smith@university.edu"))
@@ -184,7 +180,6 @@ class LecturerControllerTest {
         mockMvc.perform(get("/lecturer/{id}", lecturerId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value("lecturer-123"))
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
                 .andExpect(jsonPath("$.email").value("john.doe@university.edu"))
@@ -211,7 +206,6 @@ class LecturerControllerTest {
     @DisplayName("Should get all lecturers successfully")
     void givenLecturersExist_whenGetAllLecturers_thenReturnAllLecturers() throws Exception {
         LecturerResponseDTO lecturer2 = new LecturerResponseDTO();
-        lecturer2.setId("lecturer-456");
         lecturer2.setFirstName("Alice");
         lecturer2.setLastName("Johnson");
         lecturer2.setEmail("alice.johnson@university.edu");
@@ -226,10 +220,8 @@ class LecturerControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].id").value("lecturer-123"))
                 .andExpect(jsonPath("$[0].firstName").value("John"))
                 .andExpect(jsonPath("$[0].lastName").value("Doe"))
-                .andExpect(jsonPath("$[1].id").value("lecturer-456"))
                 .andExpect(jsonPath("$[1].firstName").value("Alice"))
                 .andExpect(jsonPath("$[1].lastName").value("Johnson"));
 
@@ -271,7 +263,6 @@ class LecturerControllerTest {
         mockMvc.perform(post("/lecturer/{lecturerId}/courses/{courseId}", lecturerId, courseId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value("lecturer-123"))
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Doe"));
 
@@ -316,7 +307,6 @@ class LecturerControllerTest {
         mockMvc.perform(delete("/lecturer/{lecturerId}/courses/{courseId}", lecturerId, courseId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value("lecturer-123"))
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Doe"));
 

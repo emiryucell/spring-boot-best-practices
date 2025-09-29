@@ -63,7 +63,6 @@ class CourseServiceImplTest {
         course.setUpdatedAt(LocalDateTime.now());
 
         courseResponseDTO = new CourseResponseDTO();
-        courseResponseDTO.setId("course-123");
         courseResponseDTO.setTitle("Java Programming");
         courseResponseDTO.setDescription("Complete Java programming course for beginners");
         courseResponseDTO.setPrice(99.99);
@@ -86,7 +85,6 @@ class CourseServiceImplTest {
         CourseResponseDTO result = courseService.createCourse(courseDTO);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo("course-123");
         assertThat(result.getTitle()).isEqualTo("Java Programming");
         assertThat(result.getDescription()).isEqualTo("Complete Java programming course for beginners");
         assertThat(result.getPrice()).isEqualTo(99.99);
@@ -120,7 +118,6 @@ class CourseServiceImplTest {
         CourseResponseDTO result = courseService.updateCourse(courseId, courseDTO);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(courseId);
         assertThat(result.getTitle()).isEqualTo("Java Programming");
         assertThat(result.getDescription()).isEqualTo("Complete Java programming course for beginners");
         assertThat(result.getPrice()).isEqualTo(99.99);
@@ -158,7 +155,6 @@ class CourseServiceImplTest {
         CourseResponseDTO result = courseService.getCourseById(courseId);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo("course-123");
         assertThat(result.getTitle()).isEqualTo("Java Programming");
         assertThat(result.getDescription()).isEqualTo("Complete Java programming course for beginners");
         assertThat(result.getPrice()).isEqualTo(99.99);
@@ -191,7 +187,6 @@ class CourseServiceImplTest {
         course2.setPrice(89.99);
 
         CourseResponseDTO courseResponseDTO2 = new CourseResponseDTO();
-        courseResponseDTO2.setId("course-456");
         courseResponseDTO2.setTitle("Python Programming");
         courseResponseDTO2.setDescription("Complete Python programming course");
         courseResponseDTO2.setPrice(89.99);
@@ -206,9 +201,7 @@ class CourseServiceImplTest {
 
         assertThat(result).isNotNull();
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getId()).isEqualTo("course-123");
         assertThat(result.get(0).getTitle()).isEqualTo("Java Programming");
-        assertThat(result.get(1).getId()).isEqualTo("course-456");
         assertThat(result.get(1).getTitle()).isEqualTo("Python Programming");
 
         verify(courseRepository, times(1)).findAll();
@@ -233,7 +226,6 @@ class CourseServiceImplTest {
         assertThat(result.getTotalPages()).isEqualTo(1);
         assertThat(result.getNumber()).isEqualTo(0);
         assertThat(result.getSize()).isEqualTo(10);
-        assertThat(result.getContent().get(0).getId()).isEqualTo("course-123");
         assertThat(result.getContent().get(0).getTitle()).isEqualTo("Java Programming");
 
         verify(courseRepository, times(1)).findAll(pageable);
