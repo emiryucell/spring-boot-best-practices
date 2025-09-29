@@ -11,36 +11,6 @@ This project is designed as a **personal reference and learning tool** to:
 - Serve as a quick reference when starting new Spring Boot projects
 - Illustrate proper usage of Spring ecosystem technologies
 
-## 🏗️ Architecture & Best Practices Demonstrated
-
-### **Layered Architecture Pattern**
-- **Controller Layer**: REST endpoints with proper HTTP semantics
-- **Service Layer**: Business logic implementation with interface segregation
-- **Repository Layer**: Data access abstraction using Spring Data JPA
-- **DTO Layer**: Clean separation between API contracts and domain models
-
-### **Dependency Injection Patterns**
-- **Constructor Injection**: Preferred approach for mandatory dependencies
-- **Field Injection**: Avoided in favor of constructor injection
-- **Interface-Based Design**: Services defined as interfaces for better testability
-
-### **Data Management Best Practices**
-- **Server-Side Pagination**: Efficient handling of large datasets
-- **Entity Relationships**: Proper JPA annotations and lazy loading
-- **Database Validation**: Multi-layer validation (Bean Validation + Database constraints)
-- **Transaction Management**: Declarative transaction handling
-
-### **Error Handling & Validation**
-- **Global Exception Handler**: Centralized error handling strategy
-- **Custom Exceptions**: Domain-specific exception types
-- **Bean Validation**: Comprehensive input validation with custom messages
-- **Structured Error Responses**: Consistent API error format
-
-### **Testing Strategy**
-- **Unit Testing**: Controller and service layer testing
-- **Mock-based Testing**: Proper isolation of components
-- **Test Data Management**: Clean test setup and teardown
-
 ## 🛠️ Technology Stack
 
 - **Java 21** - LTS version
@@ -76,6 +46,35 @@ src/
 │         └── service/               
 ```
 
+## 🏗️ Architecture & Best Practices Demonstrated
+
+### **Layered Architecture Pattern**
+- **Controller Layer**: REST endpoints with proper HTTP semantics
+- **Service Layer**: Business logic implementation with interface segregation
+- **Repository Layer**: Data access abstraction using Spring Data JPA
+- **DTO Layer**: Clean separation between API contracts and domain models
+
+### **Dependency Injection Patterns**
+- **Constructor Injection**: Preferred approach for mandatory dependencies
+- **Field Injection**: Avoided in favor of constructor injection
+- **Interface-Based Design**: Services defined as interfaces for better testability
+
+### **Data Management Best Practices**
+- **Server-Side Pagination**: Efficient handling of large datasets
+- **Entity Relationships**: Proper JPA annotations and lazy loading
+- **Database Validation**: Multi-layer validation (Bean Validation + Database constraints)
+- **Transaction Management**: Declarative transaction handling
+
+### **Error Handling & Validation**
+- **Global Exception Handler**: Centralized error handling strategy
+- **Custom Exceptions**: Domain-specific exception types
+- **Bean Validation**: Comprehensive input validation with custom messages
+- **Structured Error Responses**: Consistent API error format
+
+### **Testing Strategy**
+- **Unit Testing**: Controller and service layer testing
+- **Mock-based Testing**: Proper isolation of components
+- **Test Data Management**: Clean test setup and teardown
 
 ## 💡 Key Implementation Examples & Patterns
 
