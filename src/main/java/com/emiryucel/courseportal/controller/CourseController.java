@@ -6,6 +6,8 @@ import com.emiryucel.courseportal.service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -43,11 +45,7 @@ public class CourseController {
     public ResponseEntity<CourseResponseDTO> getCourseById(@PathVariable String id) {
         log.debug("Fetching course with ID: {}", id);
         CourseResponseDTO course = courseService.getCourseById(id);
-        if (course != null) {
-            log.debug("Course with ID: {} found", id);
-        } else {
-            log.warn("Course with ID: {} not found", id);
-        }
+        log.debug("Course with ID: {} found", id);
         return ResponseEntity.ok(course);
     }
 
@@ -56,6 +54,20 @@ public class CourseController {
         log.debug("Fetching all courses");
         List<CourseResponseDTO> courses = courseService.getAllCourses();
         log.debug("Retrieved {} courses", courses.size());
+        return ResponseEntity.ok(courses);
+    }
+
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<CourseResponseDTO>> getAllCoursesPaginated(Pageable pageable) {
+        log.debug("Fetching courses with pagination - page: {}, size: {}, sort: {}", 
+                  pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        
+        Page<CourseResponseDTO> courses = courseService.getAllCourses(pageable);
+        log.debug("Retrieved {} courses on page {} of {}", 
+                  courses.getNumberOfElements(), 
+                  courses.getNumber() + 1, 
+                  courses.getTotalPages());
+        
         return ResponseEntity.ok(courses);
     }
 

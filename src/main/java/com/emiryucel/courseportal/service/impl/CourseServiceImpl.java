@@ -9,6 +9,8 @@ import com.emiryucel.courseportal.repository.CourseRepository;
 import com.emiryucel.courseportal.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,6 +78,21 @@ public class CourseServiceImpl implements CourseService {
         log.debug("Found {} courses", courses.size());
         
         return courseMapper.toResponseDtoList(courses);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<CourseResponseDTO> getAllCourses(Pageable pageable) {
+        log.debug("Fetching courses with pagination - page: {}, size: {}, sort: {}", 
+                  pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        
+        Page<Course> coursePage = courseRepository.findAll(pageable);
+        log.debug("Found {} courses on page {} of {}", 
+                  coursePage.getNumberOfElements(), 
+                  coursePage.getNumber() + 1, 
+                  coursePage.getTotalPages());
+        
+        return coursePage.map(courseMapper::toResponseDto);
     }
 
     @Override
