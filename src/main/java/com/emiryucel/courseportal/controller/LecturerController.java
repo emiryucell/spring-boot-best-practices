@@ -27,7 +27,7 @@ public class LecturerController {
     public ResponseEntity<LecturerResponseDTO> createLecturer(@Valid @RequestBody LecturerDTO lecturerDTO) {
         log.info("Creating new lecturer: {} {}", lecturerDTO.getFirstName(), lecturerDTO.getLastName());
         LecturerResponseDTO createdLecturer = lecturerService.createLecturer(lecturerDTO);
-        log.info("Lecturer created successfully with ID: {}", createdLecturer.getId());
+        log.info("Lecturer created successfully with name: {}", createdLecturer.getFirstName()+createdLecturer.getLastName());
         return new ResponseEntity<>(createdLecturer, HttpStatus.CREATED);
     }
 
