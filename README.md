@@ -202,14 +202,17 @@ public class CourseResponseDTO {
 ### **8. MapStruct for Object Mapping**
 **Why**: Compile-time mapping generation, type-safe, high performance
 ```java
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.WARN,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
+@Component
 public interface CourseMapper {
-    CourseResponseDTO toResponseDTO(Course course);
+    CourseResponseDTO toResponseDto(Course course);
     Course toEntity(CourseDTO courseDTO);
-    
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    Course toEntityForUpdate(CourseDTO courseDTO);
+    void updateEntityFromDto(CourseDTO courseDTO, @MappingTarget Course course);
+    List<CourseResponseDTO> toResponseDtoList(List<Course> courses);
 }
 ```
 
@@ -226,16 +229,18 @@ class CourseControllerTest {
     
     @MockitoBean
     private CourseService courseService;
-    
+
     @Test
+    @DisplayName("Should create course successfully")
     void givenValidCourseDTO_whenCreateCourse_thenReturnCreatedCourse() throws Exception {
         when(courseService.createCourse(any(CourseDTO.class))).thenReturn(courseResponseDTO);
-        
         mockMvc.perform(post("/course")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(courseDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(courseDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.title").value("Java Programming"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.title").value("Java Programming"))
+        verify(courseService, times(1)).createCourse(any(CourseDTO.class));
     }
 }
 ```
