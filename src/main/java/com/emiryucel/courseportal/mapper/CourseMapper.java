@@ -9,6 +9,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 @Mapper(
         componentModel = "spring",
@@ -17,13 +19,8 @@ import org.springframework.stereotype.Component;
 )
 @Component
 public interface CourseMapper {
-
     CourseResponseDTO toResponseDto(Course course);
-
     Course toEntity(CourseDTO courseDTO);
-
     void updateEntityFromDto(CourseDTO courseDTO, @MappingTarget Course course);
-
-    java.util.List<CourseResponseDTO> toResponseDtoList(java.util.List<Course> courses);
-
+    List<CourseResponseDTO> toResponseDtoList(List<Course> courses);
 }
